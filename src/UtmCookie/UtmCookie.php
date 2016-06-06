@@ -142,6 +142,8 @@ class UtmCookie
 	public static function setName($utmCookieName)
 	{
 		self::$utmCookieName = $utmCookieName;
+		// cancel previos init
+		self::$utmCookie = null;
 	}
 	
 	/**
