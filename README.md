@@ -41,8 +41,6 @@ composer install
 ### Basic Example
 
 ```php
-UTMCookie::save(); // save all utm parameters into cookie, overwrite only changed
-UtmCookie::save(true); // save all utm parameters into cookie, overwrite all utm even if just one is detected
 UtmCookie::get(); // get all utm cookies as array
 UtmCookie::getObject(); // get all utm cookies as object (stdClass)
 UtmCookie::get('utm_source'); // get utm_source
@@ -60,6 +58,13 @@ UtmCookie::setLifetime($dateInterval);
 
 ```php
 UtmCookie::setName('utm');
+```
+
+### Set if overwrite all utm values even if only one detected.
+Default TRUE. If set to false, utm value is overwite only if set (others will stay).
+
+```php
+UtmCookie::setOverwrite(false);
 ```
 
 More examples can be found in the examples/ directory.
