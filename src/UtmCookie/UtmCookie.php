@@ -18,7 +18,7 @@ use UnexpectedValueException;
  * Than cookie (utm) can be used later without parsing google or any other cookies.
  *
  * @package UtmCookie
- * @version 0.0.2
+ * @version 1.0.0
  * @author Petr Suchy (xsuchy09) <suchy@wamos.cz> <http://www.wamos.cz>
  * @license Apache License 2.0
  * @link https://github.com/xsuchy09/utm-cookie
@@ -77,34 +77,26 @@ class UtmCookie
 		
 		self::initStaticValues();
 
-		$utmCookie = filter_input(INPUT_COOKIE, self::$utmCookieName, FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
-		if ($utmCookie === null) {
-			$utmCookie = [];
-		}
+		// utm from _COOKIE
+		$utmCookie = self::removeNullValues(filter_input(INPUT_COOKIE, self::$utmCookieName, FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY));
 
-		$utmGet = filter_input_array(
-				INPUT_GET, 
-				[
-					'utm_campaign' => FILTER_SANITIZE_STRING, 
-					'utm_medium'   => FILTER_SANITIZE_STRING, 
-					'utm_source'   => FILTER_SANITIZE_STRING, 
-					'utm_term'     => FILTER_SANITIZE_STRING, 
-					'utm_content'  => FILTER_SANITIZE_STRING
-				]
+		// utm from _GET
+		$utmGet = self::removeNullValues(
+				filter_input_array(
+					INPUT_GET, 
+					[
+						'utm_campaign' => FILTER_SANITIZE_STRING, 
+						'utm_medium'   => FILTER_SANITIZE_STRING, 
+						'utm_source'   => FILTER_SANITIZE_STRING, 
+						'utm_term'     => FILTER_SANITIZE_STRING, 
+						'utm_content'  => FILTER_SANITIZE_STRING
+					]
+				)
 		);
-		if ($utmGet === null) {
-			$utmGet = [];
-		}
 		
 		if (count($utmGet) !== 0 && self::$overwrite === true) {
 			$utmCookieSave = array_merge(self::$utmCookie, $utmGet);
 		} else {
-			$utmGet = array_filter(
-					$utmGet, 
-					function($value) {
-						return $value !== null;
-					}
-			);
 			$utmCookieSave = array_merge(self::$utmCookie, $utmCookie, $utmGet);
 		}
 
@@ -136,6 +128,26 @@ class UtmCookie
 		if (self::$overwrite === null) {
 			self::$overwrite = true;
 		}
+	}
+	
+	/**
+	 * Remove elements with null values from array.
+	 * 
+	 * @param array|null $array
+	 * 
+	 * @return array
+	 */
+	private static function removeNullValues(array $array = null)
+	{
+		if ($array === null) {
+			return [];
+		}
+		return array_filter(
+				$array, 
+				function($value) {
+					return $value !== null;
+				}
+		);
 	}
 	
 	/**
@@ -180,6 +192,7 @@ class UtmCookie
 	public static function get($key = null)
 	{
 		self::init();
+		
 		if ($key === null) {
 			return self::$utmCookie;
 		} else {
