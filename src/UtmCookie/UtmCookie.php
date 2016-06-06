@@ -68,7 +68,7 @@ class UtmCookie
 	 * 
 	 * @return void
 	 */
-	private static function init()
+	public static function init()
 	{
 		// if initializated, just return
 		if (self::$utmCookie !== null) {
