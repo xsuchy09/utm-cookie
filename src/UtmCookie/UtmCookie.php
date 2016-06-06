@@ -18,7 +18,7 @@ use UnexpectedValueException;
  * Than cookie (utm) can be used later without parsing google or any other cookies.
  *
  * @package UtmCookie
- * @version 0.0.1
+ * @version 0.0.2
  * @author Petr Suchy (xsuchy09) <suchy@wamos.cz> <http://www.wamos.cz>
  * @license Apache License 2.0
  * @link https://github.com/xsuchy09/utm-cookie

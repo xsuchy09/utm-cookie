@@ -41,6 +41,7 @@ composer install
 ### Basic Example
 
 ```php
+UtmCookie::init(); // just init - read utm params and cookie and save new values (is auto called by first call of UtmCookie::get method)
 UtmCookie::get(); // get all utm cookies as array
 UtmCookie::getObject(); // get all utm cookies as object (stdClass)
 UtmCookie::get('utm_source'); // get utm_source

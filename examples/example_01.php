@@ -10,6 +10,9 @@ require_once __DIR__ . '/../src/UtmCookie/UtmCookie.php';
 
 use UtmCookie\UtmCookie;
 
+// just init (read utm params and cookie and save new values)
+UtmCookie::init();
+
 // set name of utm cookie (this cookie will be created and used for saving all utm values)
 UtmCookie::setName('my_utm');
 
