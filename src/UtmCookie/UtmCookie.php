@@ -18,7 +18,7 @@ use UnexpectedValueException;
  * Than cookie (utm) can be used later without parsing google or any other cookies.
  *
  * @package UtmCookie
- * @version 1.0.0
+ * @version 1.0.1
  * @author Petr Suchy (xsuchy09) <suchy@wamos.cz> <http://www.wamos.cz>
  * @license Apache License 2.0
  * @link https://github.com/xsuchy09/utm-cookie
@@ -100,7 +100,10 @@ class UtmCookie
 			$utmCookieSave = array_merge(self::$utmCookie, $utmCookie, $utmGet);
 		}
 
-		self::save($utmCookieSave);
+		if (count($utmGet) !== 0) {
+			self::save($utmCookieSave);
+		}
+		
 	}
 	
 	/**
