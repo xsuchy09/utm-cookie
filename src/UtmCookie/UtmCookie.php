@@ -78,6 +78,9 @@ class UtmCookie
 		self::initStaticValues();
 
 		$utmCookie = filter_input(INPUT_COOKIE, self::$utmCookieName, FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
+		if ($utmCookie === null) {
+			$utmCookie = [];
+		}
 
 		$utmGet = filter_input_array(
 				INPUT_GET, 
@@ -92,6 +95,7 @@ class UtmCookie
 		if ($utmGet === null) {
 			$utmGet = [];
 		}
+		
 		if (count($utmGet) !== 0 && self::$overwrite === true) {
 			$utmCookieSave = array_merge(self::$utmCookie, $utmGet);
 		} else {
