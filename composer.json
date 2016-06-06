@@ -6,7 +6,7 @@
     "keywords": ["utm", "cookie", "analytics"],
     "homepage": "https://github.com/xsuchy09/utm-cookie",
     "require": {
-        "php": ">=5.4.0"
+        "php": ">=5.4 || >=7.0"
     },
     "license": "Apache-2.0",
     "authors": [
