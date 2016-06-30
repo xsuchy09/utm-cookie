@@ -78,21 +78,27 @@ class UtmCookie
 		self::initStaticValues();
 
 		// utm from _COOKIE
-		$utmCookie = self::removeNullValues(filter_input(INPUT_COOKIE, self::$utmCookieName, FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY));
+		$utmCookieFilter = filter_input(INPUT_COOKIE, self::$utmCookieName, FILTER_SANITIZE_STRING, FILTER_REQUIRE_ARRAY);
+		if (false === is_array($utmCookieFilter)) {
+			$utmCookieFilter = [];
+		}
+		$utmCookie = self::removeNullValues($utmCookieFilter);
 
 		// utm from _GET
-		$utmGet = self::removeNullValues(
-				filter_input_array(
-					INPUT_GET, 
-					[
-						'utm_campaign' => FILTER_SANITIZE_STRING, 
-						'utm_medium'   => FILTER_SANITIZE_STRING, 
-						'utm_source'   => FILTER_SANITIZE_STRING, 
-						'utm_term'     => FILTER_SANITIZE_STRING, 
-						'utm_content'  => FILTER_SANITIZE_STRING
-					]
-				)
+		$utmGetFilter = filter_input_array(
+				INPUT_GET, 
+				[
+					'utm_campaign' => FILTER_SANITIZE_STRING, 
+					'utm_medium'   => FILTER_SANITIZE_STRING, 
+					'utm_source'   => FILTER_SANITIZE_STRING, 
+					'utm_term'     => FILTER_SANITIZE_STRING, 
+					'utm_content'  => FILTER_SANITIZE_STRING
+				]
 		);
+		if (false === is_array($utmGetFilter)) {
+			$utmGetFilter = [];
+		}
+		$utmGet = self::removeNullValues($utmGetFilter);
 		
 		if (count($utmGet) !== 0 && self::$overwrite === true) {
 			$utmCookieSave = array_merge(self::$utmCookie, $utmGet);
