@@ -142,7 +142,8 @@ class UtmCookie
 	 */
 	private static function removeNullValues(array $array = null)
 	{
-		if ($array === null) {
+		// null (undefined) or false (filter failed)
+		if ($array === null || $array === false) {
 			return [];
 		}
 		return array_filter(
