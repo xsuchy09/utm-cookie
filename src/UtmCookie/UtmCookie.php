@@ -108,8 +108,9 @@ class UtmCookie
 
 		if (count($utmGet) !== 0) {
 			self::save($utmCookieSave);
+		} else {
+			self::$utmCookie = $utmCookieSave;
 		}
-		
 	}
 	
 	/**
