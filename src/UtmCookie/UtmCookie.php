@@ -184,7 +184,7 @@ class UtmCookie
 	}
 	
 	/**
-	 * Set if even one utm value in _GET will overwirte all utm values or not.
+	 * Set if even one utm value in _GET will overwrite all utm values or not. Have to be call first (before init method).
 	 * 
 	 * @param bool $overwrite
 	 */
