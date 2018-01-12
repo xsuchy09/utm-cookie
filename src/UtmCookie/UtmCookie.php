@@ -39,7 +39,7 @@ class UtmCookie
 	/**
 	 * @var array
 	 */
-	private static $utmCookie;
+	private static $utmCookie = null;
 	
 	/**
 	 * Lifetime of utmCookie
@@ -169,7 +169,7 @@ class UtmCookie
 	public static function setName($utmCookieName)
 	{
 		self::$utmCookieName = $utmCookieName;
-		// cancel previos init
+		// cancel previous init
 		self::$utmCookie = null;
 	}
 	
@@ -187,9 +187,14 @@ class UtmCookie
 	 * Set if even one utm value in _GET will overwrite all utm values or not. Have to be call first (before init method).
 	 * 
 	 * @param bool $overwrite
+	 *
+	 * @throws LogicException
 	 */
 	public static function setOverwrite($overwrite)
 	{
+		if (self::$utmCookie !== null) {
+			throw new LogicException('This method have to be called before init method or after setName method.');
+		}
 		self::$overwrite = (bool)$overwrite;
 	}
 	
