@@ -187,8 +187,6 @@ class UtmCookie
 	 * Set if even one utm value in _GET will overwrite all utm values or not.
 	 * 
 	 * @param bool $overwrite
-	 *
-	 * @throws LogicException
 	 */
 	public static function setOverwrite($overwrite)
 	{
