@@ -184,7 +184,7 @@ class UtmCookie
 	}
 	
 	/**
-	 * Set if even one utm value in _GET will overwrite all utm values or not. Have to be call first (before init method).
+	 * Set if even one utm value in _GET will overwrite all utm values or not.
 	 * 
 	 * @param bool $overwrite
 	 *
@@ -192,10 +192,9 @@ class UtmCookie
 	 */
 	public static function setOverwrite($overwrite)
 	{
-		if (self::$utmCookie !== null) {
-			throw new LogicException('This method have to be called before init method or after setName method.');
-		}
 		self::$overwrite = (bool)$overwrite;
+		// cancel previous init
+		self::$utmCookie = null;
 	}
 	
 	/**
