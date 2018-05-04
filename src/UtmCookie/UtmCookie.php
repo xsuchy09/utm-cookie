@@ -54,6 +54,14 @@ class UtmCookie
 	 * @var bool
 	 */
 	private static $overwrite;
+
+
+    /**
+     * Domain of utmCookie
+     *
+     * @var String
+     */
+	private static $domain = "";
 	
 	/**
 	 * Constructor - private.
@@ -182,6 +190,18 @@ class UtmCookie
 	{
 		self::$lifetime = $lifetime;
 	}
+
+
+    /**
+     *  Set domain of utm cookie
+     *
+     * @param String $domain
+     */
+
+    public static function setDomain($domain)
+    {
+        self::$domain = $domain;
+    }
 	
 	/**
 	 * Set if even one utm value in _GET will overwrite all utm values or not.
@@ -241,7 +261,7 @@ class UtmCookie
 		$expire->add(self::$lifetime);
 		
 		foreach ($utmCookieSave as $key => $value) {
-			setcookie(self::$utmCookieName . '[' . $key . ']', $value, $expire->getTimestamp(), '/');
+			setcookie(self::$utmCookieName . '[' . $key . ']', $value, $expire->getTimestamp(), '/', self::$domain);
 		}
 
 		self::$utmCookie = $utmCookieSave;
