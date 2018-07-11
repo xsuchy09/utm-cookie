@@ -1,7 +1,7 @@
 {
     "name": "xsuchy09/utm-cookie",
     "description": "Utm-Cookie saves utm parameters from url into cookie with defined lifetime (default 7 days). Than cookie (utm) can be used later without parsing google or any other cookies.",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "type": "library",
     "keywords": ["utm", "cookie", "analytics"],
     "homepage": "https://github.com/xsuchy09/utm-cookie",

@@ -56,6 +56,34 @@ class UtmCookie
 	private static $overwrite;
 	
 	/**
+	 * Path for cookie. Default "/" so not empty like in setcookie PHP function!
+	 *
+	 * @var string
+	 */
+	private static $path = '/';
+	
+	/**
+	 * Domain for cookie.
+	 *
+	 * @var string
+	 */
+	private static $domain = '';
+	
+	/**
+	 * If cookie should be secured (same as $secure parameter in setcookie PHP function).
+	 *
+	 * @var bool
+	 */
+	private static $secure = false;
+	
+	/**
+	 * If cookie should be http only (same as $httponly parameter in setcookie PHP function).
+	 *
+	 * @var bool
+	 */
+	private static $httpOnly = false;
+	
+	/**
 	 * Constructor - private.
 	 */
 	private function __construct()
@@ -196,6 +224,46 @@ class UtmCookie
 	}
 	
 	/**
+	 * Set path for cookie.
+	 * 
+	 * @param string $path
+	 */
+	public static function setPath($path)
+	{
+		self::$path = (string)$path;
+	}
+	
+	/**
+	 * Set domain for cookie.
+	 * 
+	 * @param string $domain
+	 */
+	public static function setDomain($domain)
+	{
+		self::$domain = (string)$domain;
+	}
+	
+	/**
+	 * Set secure for cookie.
+	 * 
+	 * @param type $secure
+	 */
+	public static function setSecure($secure)
+	{
+		self::$secure = (bool)$secure;
+	}
+	
+	/**
+	 * Set httponly for cookie.
+	 * 
+	 * @param type $httpOnly
+	 */
+	public static function setHttpOnly($httpOnly)
+	{
+		self::$httpOnly = (bool)$httpOnly;
+	}
+	
+	/**
 	 * Get all utm values or just value of utm with specific key.
 	 * 
 	 * @param string $key Default null (return all values as array).
@@ -241,7 +309,7 @@ class UtmCookie
 		$expire->add(self::$lifetime);
 		
 		foreach ($utmCookieSave as $key => $value) {
-			setcookie(self::$utmCookieName . '[' . $key . ']', $value, $expire->getTimestamp(), '/');
+			setcookie(self::$utmCookieName . '[' . $key . ']', $value, $expire->getTimestamp(), self::$path, self::$domain, self::$secure, self::$httpOnly);
 		}
 
 		self::$utmCookie = $utmCookieSave;
