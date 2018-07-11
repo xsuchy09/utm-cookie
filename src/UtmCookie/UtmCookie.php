@@ -194,7 +194,7 @@ class UtmCookie
 	 * 
 	 * @param string $utmCookieName
 	 */
-	public static function setName($utmCookieName)
+	public static function setName(string $utmCookieName)
 	{
 		self::$utmCookieName = $utmCookieName;
 		// cancel previous init
@@ -216,9 +216,9 @@ class UtmCookie
 	 * 
 	 * @param bool $overwrite
 	 */
-	public static function setOverwrite($overwrite)
+	public static function setOverwrite(bool $overwrite)
 	{
-		self::$overwrite = (bool)$overwrite;
+		self::$overwrite = $overwrite;
 		// cancel previous init
 		self::$utmCookie = null;
 	}
@@ -228,9 +228,9 @@ class UtmCookie
 	 * 
 	 * @param string $path
 	 */
-	public static function setPath($path)
+	public static function setPath(string $path)
 	{
-		self::$path = (string)$path;
+		self::$path = $path;
 	}
 	
 	/**
@@ -238,9 +238,9 @@ class UtmCookie
 	 * 
 	 * @param string $domain
 	 */
-	public static function setDomain($domain)
+	public static function setDomain(string $domain)
 	{
-		self::$domain = (string)$domain;
+		self::$domain = $domain;
 	}
 	
 	/**
@@ -248,9 +248,9 @@ class UtmCookie
 	 * 
 	 * @param type $secure
 	 */
-	public static function setSecure($secure)
+	public static function setSecure(bool $secure)
 	{
-		self::$secure = (bool)$secure;
+		self::$secure = $secure;
 	}
 	
 	/**
@@ -258,19 +258,19 @@ class UtmCookie
 	 * 
 	 * @param type $httpOnly
 	 */
-	public static function setHttpOnly($httpOnly)
+	public static function setHttpOnly(bool $httpOnly)
 	{
-		self::$httpOnly = (bool)$httpOnly;
+		self::$httpOnly = $httpOnly;
 	}
 	
 	/**
 	 * Get all utm values or just value of utm with specific key.
 	 * 
-	 * @param string $key Default null (return all values as array).
+	 * @param string|null $key Default null (return all values as array).
 	 * 
 	 * @return string|null Return string value or null if not set.
 	 */
-	public static function get($key = null)
+	public static function get(?string $key = null): ?string
 	{
 		self::init();
 		
@@ -293,7 +293,7 @@ class UtmCookie
 	 * 
 	 * @return stdClass
 	 */
-	public static function getObject()
+	public static function getObject(): stdClass
 	{
 		return (object)self::get();
 	}
