@@ -1,6 +1,7 @@
 # UtmCookie
 
 PHP library to save utm parameters from url into cookie for later use.
+PHP 7.1 is required for version 2.0.0+. If you need PHP 5.4+ compatibility use 1.0.6 version.
 
 Authors:
  - Petr Suchy (xsuchy09 - www.wamos.cz)
