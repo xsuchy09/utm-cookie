@@ -268,9 +268,9 @@ class UtmCookie
 	 * 
 	 * @param string|null $key Default null (return all values as array).
 	 * 
-	 * @return string|null Return string value or null if not set.
+	 * @return string|array|null Return string value, array or null if not set.
 	 */
-	public static function get(?string $key = null): ?string
+	public static function get(?string $key = null)
 	{
 		self::init();
 		
