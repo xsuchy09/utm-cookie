@@ -10,6 +10,7 @@ namespace UtmCookie;
 
 use DateInterval;
 use DateTime;
+use Exception;
 use stdClass;
 use UnexpectedValueException;
 
@@ -18,16 +19,29 @@ use UnexpectedValueException;
  * Than cookie (utm) can be used later without parsing google or any other cookies.
  *
  * @package UtmCookie
- * @version 1.0.1
+ * @version 2.0.2
  * @author Petr Suchy (xsuchy09) <suchy@wamos.cz> <http://www.wamos.cz>
  * @license Apache License 2.0
  * @link https://github.com/xsuchy09/utm-cookie
  */
 class UtmCookie
 {
-	
-	
-	const DEFAULT_UTM_COOKIE_LIFETIME = 'P7D';
+
+	/**
+	 * Default utm cookie lifetime.
+	 */
+	public const DEFAULT_UTM_COOKIE_LIFETIME = 'P7D';
+
+	/**
+	 * Which names can utm cookie keys have. Others are ignored ...
+	 */
+	public const DEFAULT_ALLOWED_UTM_COOKIE_KEYS = [
+		'utm_campaign',
+		'utm_medium',
+		'utm_source',
+		'utm_term',
+		'utm_content'
+	];
 	
 	/**
 	 * Name of cookie where will be saved utm params.
@@ -37,9 +51,9 @@ class UtmCookie
 	private static $utmCookieName;
 	
 	/**
-	 * @var array
+	 * @var array|null
 	 */
-	private static $utmCookie = null;
+	private static $utmCookie;
 	
 	/**
 	 * Lifetime of utmCookie
@@ -82,6 +96,11 @@ class UtmCookie
 	 * @var bool
 	 */
 	private static $httpOnly = false;
+
+	/**
+	 * @var array
+	 */
+	private static $allowedUtmCookieKeys;
 	
 	/**
 	 * Constructor - private.
@@ -96,7 +115,7 @@ class UtmCookie
 	 * 
 	 * @return void
 	 */
-	public static function init()
+	public static function init(): void
 	{
 		// if initializated, just return
 		if (self::$utmCookie !== null) {
@@ -128,7 +147,7 @@ class UtmCookie
 		}
 		$utmGet = self::removeNullValues($utmGetFilter);
 		
-		if (count($utmGet) !== 0 && self::$overwrite === true) {
+		if (self::$overwrite === true && count($utmGet) !== 0) {
 			$utmCookieSave = array_merge(self::$utmCookie, $utmGet);
 		} else {
 			$utmCookieSave = array_merge(self::$utmCookie, $utmCookie, $utmGet);
@@ -144,7 +163,7 @@ class UtmCookie
 	/**
 	 * Initialize static values to default (or empty) values.
 	 */
-	private static function initStaticValues()
+	private static function initStaticValues(): void
 	{
 		if (self::$utmCookieName === null) {
 			self::$utmCookieName = 'utm';
@@ -166,6 +185,10 @@ class UtmCookie
 		if (self::$overwrite === null) {
 			self::$overwrite = true;
 		}
+
+		if (self::$allowedUtmCookieKeys === null) {
+			self::$allowedUtmCookieKeys = self::DEFAULT_ALLOWED_UTM_COOKIE_KEYS;
+		}
 	}
 	
 	/**
@@ -175,7 +198,7 @@ class UtmCookie
 	 * 
 	 * @return array
 	 */
-	private static function removeNullValues(array $array = null)
+	private static function removeNullValues(array $array = null): array
 	{
 		// null (undefined) or false (filter failed)
 		if ($array === null || $array === false) {
@@ -183,7 +206,7 @@ class UtmCookie
 		}
 		return array_filter(
 				$array, 
-				function($value) {
+				static function($value) {
 					return $value !== null;
 				}
 		);
@@ -194,7 +217,7 @@ class UtmCookie
 	 * 
 	 * @param string $utmCookieName
 	 */
-	public static function setName(string $utmCookieName)
+	public static function setName(string $utmCookieName): void
 	{
 		self::$utmCookieName = $utmCookieName;
 		// cancel previous init
@@ -206,7 +229,7 @@ class UtmCookie
 	 * 
 	 * @param DateInterval $lifetime
 	 */
-	public static function setLifetime(DateInterval $lifetime)
+	public static function setLifetime(DateInterval $lifetime): void
 	{
 		self::$lifetime = $lifetime;
 	}
@@ -216,7 +239,7 @@ class UtmCookie
 	 * 
 	 * @param bool $overwrite
 	 */
-	public static function setOverwrite(bool $overwrite)
+	public static function setOverwrite(bool $overwrite): void
 	{
 		self::$overwrite = $overwrite;
 		// cancel previous init
@@ -228,7 +251,7 @@ class UtmCookie
 	 * 
 	 * @param string $path
 	 */
-	public static function setPath(string $path)
+	public static function setPath(string $path): void
 	{
 		self::$path = $path;
 	}
@@ -238,7 +261,7 @@ class UtmCookie
 	 * 
 	 * @param string $domain
 	 */
-	public static function setDomain(string $domain)
+	public static function setDomain(string $domain): void
 	{
 		self::$domain = $domain;
 	}
@@ -246,9 +269,9 @@ class UtmCookie
 	/**
 	 * Set secure for cookie.
 	 * 
-	 * @param type $secure
+	 * @param bool $secure
 	 */
-	public static function setSecure(bool $secure)
+	public static function setSecure(bool $secure): void
 	{
 		self::$secure = $secure;
 	}
@@ -256,11 +279,21 @@ class UtmCookie
 	/**
 	 * Set httponly for cookie.
 	 * 
-	 * @param type $httpOnly
+	 * @param bool $httpOnly
 	 */
-	public static function setHttpOnly(bool $httpOnly)
+	public static function setHttpOnly(bool $httpOnly): void
 	{
 		self::$httpOnly = $httpOnly;
+	}
+
+	/**
+	 * Set allowed keys for utm cookie array. Default is UtmCookie::DEFAULT_ALLOWED_UTM_COOKIE_KEYS.
+	 *
+	 * @param array $allowedUtmCookieKeys
+	 */
+	public static function setAllowedUtmCookieKeys(array $allowedUtmCookieKeys)
+	{
+		self::$allowedUtmCookieKeys = $allowedUtmCookieKeys;
 	}
 	
 	/**
@@ -268,7 +301,8 @@ class UtmCookie
 	 * 
 	 * @param string|null $key Default null (return all values as array).
 	 * 
-	 * @return string|array|null Return string value, array or null if not set.
+	 * @return array|mixed|null Return string value, array or null if not set.
+	 * @throws UnexpectedValueException
 	 */
 	public static function get(?string $key = null)
 	{
@@ -276,16 +310,14 @@ class UtmCookie
 		
 		if ($key === null) {
 			return self::$utmCookie;
-		} else {
-			if (mb_strpos($key, 'utm_') !== 0) {
-				$key = 'utm_' . $key;
-			}
-			if (false === array_key_exists($key, self::$utmCookie)) {
-				throw new UnexpectedValueException(sprintf('Argument $key has unexpecte value "%s". Utm value with key "%s" does not exists.', $key, $key));
-			} else {
-				return self::$utmCookie[$key];
-			}
 		}
+		if (strpos($key, 'utm_') !== 0 && true === in_array('utm_' . $key, self::DEFAULT_ALLOWED_UTM_COOKIE_KEYS, true)) {
+			$key = 'utm_' . $key;
+		}
+		if (false === array_key_exists($key, self::$utmCookie)) {
+			throw new UnexpectedValueException(sprintf('Argument $key has unexpecte value "%s". Utm value with key "%s" does not exists.', $key, $key));
+		}
+		return self::$utmCookie[$key];
 	}
 	
 	/**
@@ -299,19 +331,32 @@ class UtmCookie
 	}
 	
 	/**
-	 * Save utmCookie value into _COOKIE and set actual self::$utmCookie value (call only from init).
-	 * 
+	 * Save utmCookie value into _COOKIE and set actual self::$utmCookie value.
+	 * It is public method since version 2.0.2.
+	 * Can be called with own values to rewrite these cookies, but keys for utm cookie has to be allowed by UtmCookie::$allowedUtmCookieKeys.
+	 * To set UtmCookie::$allowedUtmCookieKeys use UtmCookie::setAllowedUtmCookieKeys method.
+	 *
 	 * @param array $utmCookieSave
+	 *
+	 * @return bool
 	 */
-	private static function save(array $utmCookieSave)
+	public static function save(array $utmCookieSave): bool
 	{
-		$expire = new DateTime();
-		$expire->add(self::$lifetime);
+		try {
+			$expire = new DateTime();
+			$expire->add(self::$lifetime);
+		} catch (Exception $ex) {
+			return false;
+		}
 		
 		foreach ($utmCookieSave as $key => $value) {
-			setcookie(self::$utmCookieName . '[' . $key . ']', $value, $expire->getTimestamp(), self::$path, self::$domain, self::$secure, self::$httpOnly);
+			if (true === in_array($key, self::$allowedUtmCookieKeys, false)) {
+				setcookie(self::$utmCookieName . '[' . $key . ']', $value, $expire->getTimestamp(), self::$path, self::$domain, self::$secure, self::$httpOnly);
+			}
 		}
 
 		self::$utmCookie = $utmCookieSave;
+
+		return true;
 	}
 }

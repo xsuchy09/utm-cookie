@@ -19,6 +19,8 @@ It handles utm parameters:
 
 You can get them with original name or wihout "utm_" (for example just "source" for "utm_source" - you can use both) - see examples.
 
+Since version 2.0.2 you can rewrite these cookies just with call ``UtmCookie::save($array)`` where ``$array`` should contains keys allowed by ``UtmCookie::$allowedUtmCookieKeys`` (default are allowed utm parameters names). 
+
 ## Installation (via composer)
 
 [Get composer](http://getcomposer.org/doc/00-intro.md) and add this in your requires section of the composer.json:

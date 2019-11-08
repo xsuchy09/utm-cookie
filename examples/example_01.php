@@ -32,4 +32,24 @@ $utmCookieObject = UtmCookie::getObject();
 // get just utm_source
 $utmCookieSource = UtmCookie::get('utm_source');
 // or only (return utm_source)
-$utmCookieSource = UtmCookie::get('source');
+$utmCookieSourceWithoutUtmInParamName = UtmCookie::get('source');
+
+// rewrite values with own specific
+$values = [
+	'utm_campaign' => 'edited_campaign',
+	'utm_medium' => 'edited_medium',
+	'utm_source' => 'edited_source'
+];
+UtmCookie::save($values);
+
+// allow other keys for utm cookie set
+$allowedUtmCookieKeys = UtmCookie::DEFAULT_ALLOWED_UTM_COOKIE_KEYS;
+$allowedUtmCookieKeys[] = 'my_special_cookie';
+$values = [
+	'utm_campaign' => 'edited campaign',
+	'utm_medium' => 'edited medium',
+	'utm_source' => 'edited source',
+	'my_special_cookie' => 'my special info in utm cookie'
+];
+UtmCookie::setAllowedUtmCookieKeys($allowedUtmCookieKeys);
+UtmCookie::save($values);
