@@ -351,7 +351,7 @@ class UtmCookie
 		
 		foreach ($utmCookieSave as $key => $value) {
 			if (true === in_array($key, self::$allowedUtmCookieKeys, false)) {
-				setcookie(self::$utmCookieName . '[' . $key . ']', $value, $expire->getTimestamp(), self::$path, self::$domain, self::$secure, self::$httpOnly);
+				setcookie(self::$utmCookieName . '[' . $key . ']', (string)$value, $expire->getTimestamp(), self::$path, self::$domain, self::$secure, self::$httpOnly);
 			}
 		}
 
